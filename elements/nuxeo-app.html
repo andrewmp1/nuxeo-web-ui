@@ -23,9 +23,9 @@ Contributors:
 <link rel="import" href="../../bower_components/nuxeo-ui-elements/nuxeo-routing-behavior.html">
 <link rel="import" href="../../bower_components/nuxeo-ui-elements/nuxeo-i18n-behavior.html">
 <link rel="import" href="../../bower_components/nuxeo-ui-elements/nuxeo-filters-behavior.html">
-<link rel="import" href="nuxeo-menu-item.html">
-<link rel="import" href="nuxeo-menu-icon.html">
-<script src="nuxeo-doc-types.js"></script>
+<link rel="import" href="nuxeo-app/nuxeo-menu-item.html">
+<link rel="import" href="nuxeo-app/nuxeo-menu-icon.html">
+<script src="nuxeo-app/nuxeo-doc-types.js"></script>
 
 <!--
 `nuxeo-app`
@@ -233,7 +233,7 @@ Contributors:
 
         <!-- menu -->
         <paper-menu id="menu" selected="{{selectedTab}}" attr-for-selected="name" selected-class="selected" on-iron-activate="_toggleDrawer">
-          <nuxeo-menu-icon name="browser" icon="icons:folder-open" label="app.browse"></nuxeo-menu-icon>
+          <nuxeo-menu-icon name="browse" icon="icons:folder-open" label="app.browse"></nuxeo-menu-icon>
           <nuxeo-menu-icon name="recents" icon="icons:restore" label="app.recentlyViewed"></nuxeo-menu-icon>
           <nuxeo-menu-icon name="defaultSearch" icon="icons:search" label="app.search"></nuxeo-menu-icon>
           <nuxeo-menu-icon name="expiredSearch" icon="icons:done-all" label="app.expiredSearch"></nuxeo-menu-icon>
@@ -253,7 +253,7 @@ Contributors:
 
             <nuxeo-slot slot="DRAWER_PAGES" model="[[actionContext]]"></nuxeo-slot>
 
-            <nuxeo-document-tree name="browser" id="navTree" label="app.browse" current-document="[[currentDocument]]"></nuxeo-document-tree>
+            <nuxeo-document-tree name="browse" id="navTree" label="app.browse" current-document="[[currentDocument]]"></nuxeo-document-tree>
 
             <nuxeo-recent-documents name="recents" max-size="10" id="recent"></nuxeo-recent-documents>
 
@@ -323,14 +323,13 @@ Contributors:
 
           <nuxeo-slot slot="PAGES" model="[[actionContext]]"></nuxeo-slot>
 
-          <nuxeo-layout id="home" name="home" href="[[resolveUrl('../nuxeo-home.html')]]" error="[[i18n('app.homeNotFound')]]" model="[[_homeModel(tasks)]]">
-          </nuxeo-layout>
+          <nuxeo-home name="home" tasks="[[tasks]]"></nuxeo-home>
 
-          <nuxeo-browser name="browse" id="browser" document="[[currentDocument]]" selected-tab="{{docAction}}" clipboard="[[clipboard]]"></nuxeo-browser>
+          <nuxeo-browser name="browser" id="browser" document="[[currentDocument]]" selected-tab="{{docAction}}" clipboard="[[clipboard]]"></nuxeo-browser>
 
-          <nuxeo-search-results name="search" id="searchResults"></nuxeo-search-results>
+          <nuxeo-search-results name="search-results" id="searchResults" search-form="[[searchForm]]"></nuxeo-search-results>
 
-          <nuxeo-collection-results name="collection" id="collectionResults" on-navigate="_navigateFromCollection"></nuxeo-collection-results>
+          <nuxeo-collection-results name="collection-results" id="collectionResults" on-navigate="_navigateFromCollection"></nuxeo-collection-results>
 
           <nuxeo-admin name="admin" user="[[currentUser]]" selected="[[selectedAdminTab]]" entity="[[entity]]"></nuxeo-admin>
 
@@ -396,7 +395,11 @@ Contributors:
             }
           },
 
-          page: String,
+          page: {
+            type: String,
+            observer: '_pageChanged'
+          },
+
           selectedTab: String,
           selectedAdminTab: String,
 
@@ -568,10 +571,7 @@ Contributors:
         },
 
         _updateSearch: function() {
-          var searchForm = this.$$("nuxeo-search-form[search-name='" + this.searchName + "']");
-          if (searchForm) {
-            this.$.searchResults.searchForm = searchForm;
-          }
+          this.searchForm = this.$$("nuxeo-search-form[search-name='" + this.searchName + "']");
         },
 
         _showSearchResults: function(e) {
@@ -776,8 +776,10 @@ Contributors:
           return this.$.nxcon.url + '/logout';
         },
 
-        _homeModel: function() {
-          return {tasks: this.tasks};
+        _pageChanged: function(page) {
+          if (page !== null) {
+            this.importHref(this.resolveUrl('nuxeo-' + page + '.html'));
+          }
         }
 
       });

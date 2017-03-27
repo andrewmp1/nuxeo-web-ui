@@ -47,7 +47,7 @@ Contributors:
     });
 
     page('/browse', function() {
-      app.load('browse', '', '/', 'view');
+      app.load('browser', '', '/', 'view');
     });
 
     // /browse/<path>@<action>
@@ -55,19 +55,19 @@ Contributors:
       if (!data.state.contentView) {
         app.currentContentView = null;
       }
-      app.load('browse', '', '/' + data.params[0], data.params[1] || 'view');
+      app.load('browser', '', '/' + data.params[0], data.params[1] || 'view');
     });
 
     page('/search/:searchName', function(data) {
       app.searchName = data.params.searchName;
-      app.show('search');
+      app.show('search-results');
     });
 
     page('/doc/:repo?/:id/', function(data) {
       if (!data.state.contentView) {
         app.currentContentView = null;
       }
-      app.load('browse', data.params.id, '', 'view');
+      app.load('browser', data.params.id, '', 'view');
     });
 
     page('/admin/:tab?', function(data) {
