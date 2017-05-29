@@ -71,6 +71,14 @@ Contributors:
           }
         },
 
+        listeners: {
+          'refresh-display' : '_refreshDisplay'
+        },
+
+        _refreshDisplay: function(e) {
+          this.$.results.refresh();
+        },
+
         _documentChanged: function() {
           if (this.document) {
             this.$.results.nxProvider = this.$.provider;

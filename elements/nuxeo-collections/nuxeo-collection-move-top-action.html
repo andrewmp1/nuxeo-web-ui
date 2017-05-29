@@ -87,8 +87,8 @@ Contributors:
             for (; i < this.allMembers.length; i++) {
               if (this.allMembers[i].uid === member2) {
                 if (i > 0) {
-                  this._member2Idx = i;
-                  this._member1Idx = 0;
+                  this._member2Idx = 0;
+                  this._member1Idx = i;
                   var member1 = this.allMembers[this._member1Idx].uid;
                   this.$.moveTopOp.input = this.collection.uid;
                   this.$.moveTopOp.params = {

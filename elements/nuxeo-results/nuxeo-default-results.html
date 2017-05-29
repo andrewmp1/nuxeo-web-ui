@@ -160,6 +160,10 @@ limitations under the License.
         return this.$.results.items;
       },
 
+      refresh: function() {
+        this.$.results.refresh();
+      },
+
       _navigate: function(e) {
         this.fire('navigate', {doc: (e.model || e.detail).item});
         e.stopPropagation();

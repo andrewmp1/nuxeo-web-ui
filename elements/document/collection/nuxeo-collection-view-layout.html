@@ -68,6 +68,14 @@ limitations under the License.
         }
       },
 
+      listeners: {
+        'refresh-display' : '_refreshDisplay'
+      },
+
+      _refreshDisplay: function(e) {
+        this.$.results.refresh();
+      },
+
       _documentChanged: function () {
         if (this.document && this.hasFacet(this.document, 'Collection')) {
           this.$.results.nxProvider = this.$.provider;
